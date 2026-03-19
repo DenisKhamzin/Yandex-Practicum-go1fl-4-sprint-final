@@ -48,7 +48,11 @@ func distance(steps int, height float64) float64 {
 }
 
 func meanSpeed(steps int, height float64, duration time.Duration) float64 {
-	// TODO: реализовать функцию
+	if duration <= 0 {
+		return 0
+	}
+	wayOfSuffer := distance(steps, height)
+	return wayOfSuffer / duration.Hours()
 }
 
 func TrainingInfo(data string, weight, height float64) (string, error) {
@@ -56,9 +60,21 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 }
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
-	// TODO: реализовать функцию
+	if steps == 0 || weight == 0 || height == 0 || duration == 0 {
+		return 0, errors.New("")
+	}
+	averageSpeed := meanSpeed(steps, height, duration)
+	minutes := duration.Minutes()
+	res := (weight * averageSpeed * minutes) / float64(minInH)
+	return res, nil
 }
 
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
-	// TODO: реализовать функцию
+	if steps == 0 || weight == 0 || height == 0 || duration == 0 {
+		return 0, errors.New("")
+	}
+	averageSpeed := meanSpeed(steps, height, duration)
+	minutes := duration.Minutes()
+	res := weight * averageSpeed * minutes * walkingCaloriesCoefficient / float64(minInH)
+	return res, nil
 }
