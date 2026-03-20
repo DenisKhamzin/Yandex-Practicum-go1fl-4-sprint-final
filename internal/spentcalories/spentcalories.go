@@ -25,22 +25,26 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 		return 0, "", duration, errors.New("")
 	}
 	steps, err := strconv.Atoi(parseSlice[0])
-	if err != nil {
-		return 0, "", duration, err
+	if err != nil || steps <= 0 {
+		return 0, "", duration, errors.New("количество шагов должно быть положительным")
 	}
 	activity := parseSlice[1]
-	stringDur := parseSlice[2]
-	actTime := strings.Split(strings.Split(stringDur, "m")[0], "h")
-	hours, err := strconv.Atoi(actTime[0])
-	if err != nil {
-		return 0, "", duration, err
+
+	durat, err := time.ParseDuration(parseSlice[2])
+	if err != nil || durat <= 0 {
+		return 0, "", duration, errors.New("продолжительность должна быть положительной")
 	}
-	minutes, err := strconv.Atoi(actTime[1])
-	if err != nil {
-		return 0, "", duration, err
-	}
-	duration = time.Duration(time.Duration(hours)*time.Hour + time.Duration(minutes)*time.Minute)
-	return steps, activity, duration, nil
+	//actTime := strings.Split(strings.Split(stringDur, "m")[0], "h")
+	//hours, err := strconv.Atoi(actTime[0])
+	//if err != nil {
+	//	return 0, "", duration, err
+	//}
+	//minutes, err := strconv.Atoi(actTime[1])
+	//if err != nil {
+	//	return 0, "", duration, err
+	//}
+	//duration = time.Duration(time.Duration(hours)*time.Hour + time.Duration(minutes)*time.Minute)
+	return steps, activity, durat, nil
 }
 
 func distance(steps int, height float64) float64 {
@@ -62,22 +66,44 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println(duration)
+	pathOfSuffer := float64(steps) * lenStep / mInKm
+
 	switch activity {
 	case "Ходьба":
-		res := strconv.Itoa(steps)
-		return res, nil
+		walking, err := WalkingSpentCalories(steps, weight, height, duration)
+		if err != nil {
+			return "", err
+		}
+		aver := pathOfSuffer / duration.Hours()
+		result := fmt.Sprintf("Тип тренировки: Ходьба\nДлительность: %.2f ч.\n", duration.Hours())
+		result2 := fmt.Sprintf("Дистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", pathOfSuffer, aver, walking)
+		return result + result2, nil
 	case "Бег":
-		res := strconv.Itoa(steps)
-		return res, nil
+		running, err := WalkingSpentCalories(steps, weight, height, duration)
+		if err != nil {
+			return "", err
+		}
+		aver := pathOfSuffer / duration.Hours()
+		result := fmt.Sprintf("Тип тренировки: Бег\nДлительность: %.2f ч.\n", duration.Hours())
+		result2 := fmt.Sprintf("Дистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", pathOfSuffer, aver, running)
+		return result + result2, nil
 	default:
-		return "", errors.New("неизвестный вид тренировки")
+		return "", errors.New("неизвестный тип тренировки")
 	}
 }
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
-	if steps == 0 || weight == 0 || height == 0 || duration == 0 {
-		return 0, errors.New("")
+	if steps <= 0 {
+		return 0, errors.New("количество шагов должно быть полоительным")
+	}
+	if weight <= 0 {
+		return 0, errors.New("вес должен быть положительным")
+	}
+	if height <= 0 {
+		return 0, errors.New("рост должен быть положительным")
+	}
+	if duration <= 0 {
+		return 0, errors.New("продолжительность должна быть положительной")
 	}
 	averageSpeed := meanSpeed(steps, height, duration)
 	minutes := duration.Minutes()
@@ -86,8 +112,17 @@ func RunningSpentCalories(steps int, weight, height float64, duration time.Durat
 }
 
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
-	if steps == 0 || weight == 0 || height == 0 || duration == 0 {
-		return 0, errors.New("")
+	if steps <= 0 {
+		return 0, errors.New("количество шагов должно быть полоительным")
+	}
+	if weight <= 0 {
+		return 0, errors.New("вес должен быть положительным")
+	}
+	if height <= 0 {
+		return 0, errors.New("рост должен быть положительным")
+	}
+	if duration <= 0 {
+		return 0, errors.New("продолжительность должна быть положительной")
 	}
 	averageSpeed := meanSpeed(steps, height, duration)
 	minutes := duration.Minutes()
