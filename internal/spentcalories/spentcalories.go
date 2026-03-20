@@ -66,8 +66,9 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 	if err != nil {
 		log.Println(err)
 	}
-	pathOfSuffer := float64(steps) * lenStep / mInKm
-
+	//pathOfSuffer := float64(steps) * lenStep / mInKm
+	//stepLengthCoefficient      = 0.45 // коэффициент для расчета длины шага на основе роста.
+	pathOfSuffer := float64(steps) * height * float64(stepLengthCoefficient) / mInKm
 	switch activity {
 	case "Ходьба":
 		walking, err := WalkingSpentCalories(steps, weight, height, duration)
@@ -79,7 +80,7 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 		result2 := fmt.Sprintf("Дистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", pathOfSuffer, aver, walking)
 		return result + result2, nil
 	case "Бег":
-		running, err := WalkingSpentCalories(steps, weight, height, duration)
+		running, err := RunningSpentCalories(steps, weight, height, duration)
 		if err != nil {
 			return "", err
 		}
@@ -94,7 +95,7 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 {
-		return 0, errors.New("количество шагов должно быть полоительным")
+		return 0, errors.New("количество шагов должно быть положительным")
 	}
 	if weight <= 0 {
 		return 0, errors.New("вес должен быть положительным")
@@ -113,7 +114,7 @@ func RunningSpentCalories(steps int, weight, height float64, duration time.Durat
 
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 {
-		return 0, errors.New("количество шагов должно быть полоительным")
+		return 0, errors.New("количество шагов должно быть положительным")
 	}
 	if weight <= 0 {
 		return 0, errors.New("вес должен быть положительным")
