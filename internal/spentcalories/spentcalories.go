@@ -61,11 +61,14 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 	if err != nil {
 		log.Println(err)
 	}
+	fmt.Println(duration)
 	switch activity {
 		case "Ходьба":
-			
+			res := strconv.Itoa(steps)
+			return res, nil
 		case "Бег":
-
+			res := strconv.Itoa(steps)
+			return res, nil
 		default:
 			return "", errors.New("неизвестный вид тренировки")
 	}
