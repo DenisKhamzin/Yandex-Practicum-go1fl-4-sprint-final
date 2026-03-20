@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"spentcalories"
 )
 
 const (
@@ -49,7 +50,10 @@ func DayActionInfo(data string, weight, height float64) string {
 	}
 	distance := float64(steps) * stepLength
 	way := distance / float64(mInKm)
-	calories, err := WalkingSpentCalories(steps, weight, height, duration)
-	//// форматировать строку ответа
-	return ""
+	calories, err := spentcalories.WalkingSpentCalories(steps, weight, height, duration)
+	if err != nil {
+		return ""
+	}
+	result := fmt.Sprintf("Количество шагов: %d./nДистанция состоавила: %2f км./nВы сожгли: %2f ккал.", steps, way, calories)
+	return result
 }

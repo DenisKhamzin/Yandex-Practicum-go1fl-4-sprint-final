@@ -1,10 +1,11 @@
 package spentcalories
 
 import (
-	"strconv"
-	"time"
-	"strings"
 	"errors"
+	"log"
+	"strconv"
+	"strings"
+	"time"
 )
 
 // Основные константы, необходимые для расчетов.
@@ -56,7 +57,18 @@ func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 }
 
 func TrainingInfo(data string, weight, height float64) (string, error) {
-	// TODO: реализовать функцию
+	steps, activity, duration, err := parseTraining(data)
+	if err != nil {
+		log.Println(err)
+	}
+	switch activity {
+		case "Ходьба":
+			
+		case "Бег":
+
+		default:
+			return "", errors.New("неизвестный вид тренировки")
+	}
 }
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
