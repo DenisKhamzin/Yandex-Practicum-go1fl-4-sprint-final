@@ -3,10 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
-	//"github.com/Yandex-Practicum/tracker/internal/daysteps"
-	//"github.com/Yandex-Practicum/tracker/internal/spentcalories"
-	"internal/daysteps"
-	"internal/spentcalories"
+
+	"github.com/DenisKhamzin/Yandex-Practicum-go1fl-4-sprint-final/internal/daysteps"
+	"github.com/DenisKhamzin/Yandex-Practicum-go1fl-4-sprint-final/internal/spentcalories"
+	//"internal/daysteps"
+	//"internal/spentcalories"
 )
 
 func main() {

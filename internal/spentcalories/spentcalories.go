@@ -2,6 +2,7 @@ package spentcalories
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"strconv"
 	"strings"
@@ -25,7 +26,7 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 	}
 	steps, err := strconv.Atoi(parseSlice[0])
 	if err != nil {
-			return 0, "", duration, err
+		return 0, "", duration, err
 	}
 	activity := parseSlice[1]
 	stringDur := parseSlice[2]
@@ -63,14 +64,14 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 	}
 	fmt.Println(duration)
 	switch activity {
-		case "Ходьба":
-			res := strconv.Itoa(steps)
-			return res, nil
-		case "Бег":
-			res := strconv.Itoa(steps)
-			return res, nil
-		default:
-			return "", errors.New("неизвестный вид тренировки")
+	case "Ходьба":
+		res := strconv.Itoa(steps)
+		return res, nil
+	case "Бег":
+		res := strconv.Itoa(steps)
+		return res, nil
+	default:
+		return "", errors.New("неизвестный вид тренировки")
 	}
 }
 

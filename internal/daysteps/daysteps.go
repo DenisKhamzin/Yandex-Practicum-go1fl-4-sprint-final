@@ -3,10 +3,14 @@ package daysteps
 import (
 	"errors"
 	"fmt"
-	"internal/spentcalories"
+
+	//"internal/spentcalories"
+	"log"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/DenisKhamzin/Yandex-Practicum-go1fl-4-sprint-final/internal/spentcalories"
 )
 
 const (
@@ -20,32 +24,37 @@ func parsePackage(data string) (int, time.Duration, error) {
 	duration := time.Duration(0)
 	parseList := strings.Split(data, ",")
 	if len(parseList) != 2 {
-		return 0, duration, errors.New("")
+		return 0, duration, errors.New("неверный формат")
 	}
 	steps, err := strconv.Atoi(parseList[0])
 	if err != nil || steps <= 0 {
-		return 0, duration, err
+		return 0, duration, errors.New("неверное количество шагов")
 	}
-	walkTime := strings.Split(strings.Split(parseList[1], "m")[0], "h")
-	hours, err := strconv.Atoi(walkTime[0])
-	if err != nil {
-		return 0, duration, err
+	//walkTime := strings.Split(strings.Split(parseList[1], "m")[0], "h")
+	//hours, err := strconv.Atoi(walkTime[0])
+	//if err != nil {
+	//	return 0, duration, err
+	//}
+	//minutes, err := strconv.Atoi(walkTime[1])
+	//if err != nil {
+	//	return 0, duration, err
+	//}
+	//duration = time.Duration(time.Duration(hours)*time.Hour + time.Duration(minutes)*time.Minute)
+	durat, err := time.ParseDuration(parseList[1])
+	if err != nil || durat <= 0 {
+		return 0, duration, errors.New("неверная продолжительность")
 	}
-	minutes, err := strconv.Atoi(walkTime[1])
-	if err != nil {
-		return 0, duration, err
-	}
-	duration = time.Duration(time.Duration(hours)*time.Hour + time.Duration(minutes)*time.Minute)
-	return steps, duration, nil
+	return steps, durat, nil
 }
 
 func DayActionInfo(data string, weight, height float64) string {
 	steps, duration, err := parsePackage(data)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return ""
 	}
-	if steps == 0 {
+	if steps <= 0 {
+		log.Println(err)
 		return ""
 	}
 	distance := float64(steps) * stepLength
@@ -54,6 +63,6 @@ func DayActionInfo(data string, weight, height float64) string {
 	if err != nil {
 		return ""
 	}
-	result := fmt.Sprintf("Количество шагов: %d./nДистанция состоавила: %2f км./nВы сожгли: %2f ккал.", steps, way, calories)
+	result := fmt.Sprintf("Количество шагов: %d.\nДистанция составила %.2f км.\nВы сожгли %.2f ккал.\n", steps, way, calories)
 	return result
 }
