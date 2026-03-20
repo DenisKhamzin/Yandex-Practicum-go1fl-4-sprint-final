@@ -3,10 +3,10 @@ package daysteps
 import (
 	"errors"
 	"fmt"
+	"internal/spentcalories"
 	"strconv"
 	"strings"
 	"time"
-	"spentcalories"
 )
 
 const (
