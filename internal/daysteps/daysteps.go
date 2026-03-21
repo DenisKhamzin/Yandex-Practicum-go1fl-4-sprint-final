@@ -29,7 +29,7 @@ func parsePackage(data string) (int, time.Duration, error) {
 	}
 	// получение количество шагов
 	steps, err := strconv.Atoi(parseList[0])
-	// проверка корректности Atoi, обработка ошибки и некорректного зисла шагов
+	// проверка корректности Atoi(), обработка ошибки и некорректного зисла шагов
 	if err != nil || steps <= 0 {
 		return 0, duration, errors.New("неверное количество шагов")
 	}
